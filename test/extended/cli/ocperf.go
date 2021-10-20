@@ -56,5 +56,15 @@ var _ = g.Describe("[cli] oc cli perf", func() {
 		}
 		duration = time.Since(start)
 		log.Printf("Duration for scale the dc replicas to 0 in each of those is %.2f seconds", duration.Seconds())
+
+		start = time.Now()
+		g.By("Try to delete project")
+		for i := 0; i < 25; i++ {
+			namespace := fmt.Sprintf("e2e-oc-cli-perf%d", i)
+			err := oc.Run("delete").Args("project", namespace).Execute()
+			o.Expect(err).NotTo(o.HaveOccurred())
+		}
+		duration = time.Since(start)
+		log.Printf("Duration for deleting 200 projects and 1 deploymentConfig in each of those is %.2f seconds", duration.Seconds())
 	})
 })
